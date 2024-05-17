@@ -5,6 +5,8 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
+# creates minimal (consensus) model, which is feasible and contains the reactions most frequently occurring in the
+# essential flux models
 
 # _____ Setting the CWD to be Flux_Code BEGIN _____
 # Flux_Code path here
@@ -29,9 +31,9 @@ from Programs.Flux_Analysis.Classes_And_Functions.Flux_Model_Class import Flux_B
 import Programs.Flux_Analysis.Classes_And_Functions.FMC_Object_Functions as fof
 # _____ Setting the CWD to be Flux_Code END _____
 
+# defines file paths
 exp_align_folder = Path("Data/Models/json_models/fast_key_format/recon_1_t_cells_12_11_23/exp_aligned_Day_2_single_size/")
 min_model_matrix_location = Path("Data/Minimal_Model_Data/recon_1_t_cells_12_11_23/")
-
 # min model location, make sure folder is created
 min_model_location = Path("Data/Models/json_models/fast_key_format/recon_1_t_cells_12_11_23/pos_min_model_Day_2_single_size/")
 
@@ -40,16 +42,13 @@ min_model_location = Path("Data/Models/json_models/fast_key_format/recon_1_t_cel
 
 flux_model_list = []
 for filename in os.listdir(exp_align_folder):
-	print(filename)
-	
 	recon_flux_model = Flux_Balance_Model()
 	recon_flux_model.load_fast_key_json_model(exp_align_folder / filename)
 	flux_model_list.append(recon_flux_model)
-print([i.model_dict["model_name"] for i in flux_model_list])
-random.shuffle(flux_model_list)
-print([i.model_dict["model_name"] for i in flux_model_list])
-print(flux_model_list)
 
+random.shuffle(flux_model_list)
+
+# creates consensus model
 min_list = fof.minimal_flux_list_multimodel_model_differences(flux_model_list,min_model_matrix_location)
 pos_min_list = fof.make_uniform_pos(min_list)
 for model_ind in range(len(pos_min_list)):

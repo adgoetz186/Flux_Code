@@ -5,7 +5,7 @@ Run the files in the following order:
 3. experimental_align_t_cell_initial_fit.py
 4. experimental_align_t_cell_single_size.py
 5. essential_flux_dataframe.py
-6. minimal_model_from_dataframes.py
+6. consensus_model_from_dataframes.py
 7. post_min_model_alterations_single_size.py
 8. generate_internal_S_mat.py
 The output of 8 is a matrix "S" which should be processed in matlab with the command "NS = null(S,"rational")"

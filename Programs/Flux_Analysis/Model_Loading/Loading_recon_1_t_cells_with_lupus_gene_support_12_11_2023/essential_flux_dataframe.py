@@ -5,7 +5,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-
+# generates minimal model matrices. Binary matricies where each row describes a unique minimal model
+# Columns correspond to reactions, entries are 1 when a reaction is essential and 0 otherwise.
 
 # _____ Setting the CWD to be Flux_Code BEGIN _____
 # Flux_Code path here
@@ -29,8 +30,11 @@ os.chdir(path_to_FC)
 from Programs.Flux_Analysis.Classes_And_Functions.Flux_Model_Class import Flux_Balance_Model
 # _____ Setting the CWD to be Flux_Code END _____
 
+# defines file locations
 model_file_location = Path("Data/Models/json_models/fast_key_format/recon_1_t_cells_12_11_23/exp_aligned_Day_2_single_size")
 output_model_folder = Path("Data/Minimal_Model_Data/recon_1_t_cells_12_11_23/")
+
+# Finds minimal models for each condition, multiple should be run in parallel to generate enough models efficiently
 for filename in os.listdir(model_file_location):
 	model_file_path = model_file_location/filename
 	recon1_exp_align = Flux_Balance_Model()
