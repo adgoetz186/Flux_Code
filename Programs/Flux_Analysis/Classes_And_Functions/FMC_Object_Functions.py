@@ -1,6 +1,7 @@
 import os
 import pickle
 import sys
+from pathlib import Path
 from pympler import asizeof
 import gurobipy as gp
 import copy
@@ -12,10 +13,9 @@ import scipy.linalg
 import time
 import scipy.sparse as sp
 import numpy as np
-import scipy.io as spio
 import random
 from matplotlib import pyplot as plt
-from Flux_Code.Programs.Flux_Analysis.Classes_And_Functions.Flux_Model_Class import Flux_Balance_Model
+from Programs.Flux_Analysis.Classes_And_Functions.Flux_Model_Class import Flux_Balance_Model
 
 def minimal_flux_list_multimodel(flux_model_list, min_model_matrix_location):
 	"""
@@ -200,6 +200,7 @@ def minimal_flux_list_multimodel_model_differences(flux_model_list, min_model_ma
 			current_ind += 1
 			if current_ind == (len(flux_model_list)):
 				print(1)
+				#print(flux_model_list[current_ind].test_feasibility())
 				essential_flux_main.append(rxn)
 				break
 			while flux_model_list[current_ind].test_feasibility():
@@ -232,8 +233,6 @@ def make_uniform_pos(flux_model_list,fva_first = True):
 				flux_model.update_reaction_bounds(rxn_name,new_bounds[rxn_name]["lb"],new_bounds[rxn_name]["ub"])
 	for flux_model in flux_model_list:
 		flux_model.convert_model_to_positive_flux()
-    #good until here
-	# gets set of all reactions accross all models
 	set_of_all_rxns = []
 	for flux_model in flux_model_list:
 		print(flux_model.model_dict["model_name"], flux_model.test_feasibility())
