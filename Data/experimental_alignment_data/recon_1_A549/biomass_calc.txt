@@ -1,0 +1,3 @@
+Doubling time = 23 hr
+https://www.sciencedirect.com/science/article/pii/S1534580716300363#mmc1 (from fig S6C)
+Growth rate = ln(2)/23 = 0.030137

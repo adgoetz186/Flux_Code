@@ -1,0 +1,7 @@
+# provide arguements for a np.linspace sweep seperated by commas
+# if you want to search through several sizes, specify start value, stop value, and number of values to test between
+# alternatively if you want to use a single value specify it as "value, value, 1"
+# sizes are assumed to be in pg (10^-12)
+# T-Cells have close to 80 pg of protein (validate)
+# the fraction of biomass protein is 0.706
+1, 400, 500
