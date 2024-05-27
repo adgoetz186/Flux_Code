@@ -1,0 +1,12 @@
+Run the files in the following order:
+1. from_mat.py
+2. curate_model.py (This compiles gene data after rxns are added)
+3. experimental_align_A549.py
+4. pos_essential_flux_dataframe.py
+5. minimal_model_from_dataframes.py
+6. post_min_model_alterations_added_variance.py
+7. generate_internal_S_mat.py
+The output of 7 is a matrix "S" which should be processed in matlab with the command "NS = null(S,"rational")"
+The output of this should be saved as NS in the same folder.
+This can be all done in python but any method which does not generate a sparse nullspace will lead to significant increases in testing for thermo feasibility
+(numpy does not natively seem to be able to do this and it is prohibitively costly in sympy)
