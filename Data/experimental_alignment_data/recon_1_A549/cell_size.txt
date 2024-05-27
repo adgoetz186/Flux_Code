@@ -1,0 +1,8 @@
+# provide arguements for a np.linspace sweep seperated by commas
+# if you want to search through several sizes, specify start value, stop value, and number of values to test between
+# alternatively if you want to use a single value specify it as "value, value, 1"
+# sizes are assumed to be in pg (10^-12)
+# A549 has 244 pg of protein
+# the fraction of biomass protein is 0.706
+# 345.6
+1, 1000, 500

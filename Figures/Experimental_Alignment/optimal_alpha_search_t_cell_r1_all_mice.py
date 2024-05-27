@@ -6,7 +6,6 @@ import copy as cp
 import scipy.optimize as so
 from gurobipy import GRB
 from pathlib import Path
-from Flux_Code.Programs.Flux_Analysis.Classes_And_Functions.Flux_Model_Class import Flux_Balance_Model
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -29,6 +28,7 @@ if path_to_FC == "":
 else:
 	path_to_CSI = Path(path_to_FC)
 os.chdir(path_to_FC)
+from Programs.Flux_Analysis.Classes_And_Functions.Flux_Model_Class import Flux_Balance_Model
 # _____ Setting the CWD to be Flux_Code END _____
 
 mouse_number_filename_dict = {1:"B6-1",2:"B6-2",3:"B6-3",4:"B6-4",5:"TC-5",6:"TC-6",7:"TC-7",8:"TC-8"}

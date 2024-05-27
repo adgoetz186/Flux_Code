@@ -5,7 +5,6 @@ import copy
 import copy as cp
 import scipy.optimize as so
 from gurobipy import GRB
-from Flux_Code.Programs.Flux_Analysis.Classes_And_Functions.Flux_Model_Class import Flux_Balance_Model
 import numpy as np
 from pathlib import Path
 from matplotlib import pyplot as plt
@@ -29,6 +28,7 @@ if path_to_FC == "":
 else:
 	path_to_CSI = Path(path_to_FC)
 os.chdir(path_to_FC)
+from Programs.Flux_Analysis.Classes_And_Functions.Flux_Model_Class import Flux_Balance_Model
 # _____ Setting the CWD to be Flux_Code END _____
 
 mouse_number_filename_dict = {1:"B6-1",2:"B6-2",3:"B6-3",4:"B6-4",5:"TC-5",6:"TC-6",7:"TC-7",8:"TC-8"}
@@ -57,7 +57,7 @@ for mouse_number in mouse_number_filename_dict.keys():
     X = X_array[best_ind]
     alpha = alpha_list[best_ind]
     print(f"{mouse_number_filename_dict[mouse_number]} size = ", 1/alpha, "pg")
-    input()
+    #input()
 
     plot_experiment = [exp[i] for i in ind]
     plot_model = [X[i] / alpha for i in ind]

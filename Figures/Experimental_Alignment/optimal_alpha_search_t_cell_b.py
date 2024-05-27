@@ -5,7 +5,6 @@ import copy
 import copy as cp
 import scipy.optimize as so
 from gurobipy import GRB
-from Flux_Code.Programs.Flux_Analysis.Classes_And_Functions.Flux_Model_Class import Flux_Balance_Model
 import numpy as np
 from pathlib import Path
 from matplotlib import pyplot as plt
@@ -29,16 +28,17 @@ if path_to_FC == "":
 else:
 	path_to_CSI = Path(path_to_FC)
 os.chdir(path_to_FC)
+from Programs.Flux_Analysis.Classes_And_Functions.Flux_Model_Class import Flux_Balance_Model
 # _____ Setting the CWD to be Flux_Code END _____
 
 mouse_number_filename_dict = {1:"B6-1",2:"B6-2",3:"B6-3",4:"B6-4",5:"TC-5",6:"TC-6",7:"TC-7",8:"TC-8"}
 #mouse_number_filename_dict = {1:"B6-1",5:"TC-5"}
 rel_error_all_mice = []
 for mouse_number in mouse_number_filename_dict.keys():
-    file_location = Path(f"Data/experimental_alignment_data/recon_1b_t_cells_gene_support/Individual_Mice/{mouse_number_filename_dict[mouse_number]}/experimental_alignment_result_data_b_Day_2_single_size.pkl")
+    file_location = Path(f"Data/experimental_alignment_data/recon_1_t_cells_12_11_23/Individual_Mice/{mouse_number_filename_dict[mouse_number]}/experimental_alignment_result_data_b_Day_2_single_size.pkl")
     with open(file_location, "rb") as readfile:
         model_dict = pickle.load(readfile)
-    model_file_location = Path("Data/Models/json_models/fast_key_format/recon_1b_t_cells/exp_aligned_Day_2_single_size/")
+    model_file_location = Path("Data/Models/json_models/fast_key_format/recon_1_t_cells_12_11_23/exp_aligned_Day_2_single_size/")
     model_file_name = f"{mouse_number_filename_dict[mouse_number]}.json"
     recon2_2_rxn_added = Flux_Balance_Model()
     recon2_2_rxn_added.load_fast_key_json_model(model_file_location/model_file_name)

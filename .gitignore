@@ -1,1 +1,13 @@
-/Data/
+*/Data/
+!*/Data/experimental_alignment_data
+*ntiquated*
+/Antiquated/Antiquated_Model_Loading/
+/Antiquated/e_coli_core/
+/Antiquated/Loading_recon_1_t_cells_for_expanded_min_model_2_27_2024/
+/Antiquated/objectve_function_handling_2_27_2024/
+/Antiquated/Antiquated_Sampling/
+/Programs/Flux_Analysis/Sampling/min_model_sampling/
+/Data/HR/
+/Data/experimental_alignment_data/recon_1_A549/align_result_data/
+/Data/experimental_alignment_data/recon_1_t_cells_2_27_2024/Individual_Mice/
+/Data/experimental_alignment_data/recon_1_t_cells_12_11_23/Individual_Mice/

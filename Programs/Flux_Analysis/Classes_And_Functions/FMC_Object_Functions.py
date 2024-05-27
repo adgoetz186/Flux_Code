@@ -17,105 +17,20 @@ import random
 from matplotlib import pyplot as plt
 from Programs.Flux_Analysis.Classes_And_Functions.Flux_Model_Class import Flux_Balance_Model
 
-def minimal_flux_list_multimodel(flux_model_list, min_model_matrix_location):
-	"""
-	Takes a list of flux model objects and an essential flux matrix and finds a core model that applies to all models.
-	Models must have the same reaction name order
-	"""
-	
-	matrix_list = []
-	header_list = []
-	for filename in os.listdir(min_model_matrix_location):
-		if "header" in filename:
-			header_list.append(np.load(min_model_matrix_location / filename))
-			print(len(header_list[-1]))
-		else:
-			matrix_list.append(np.load(min_model_matrix_location / filename))
-	# Checks to make sure all headers are the same
-	try:
-		all_header_same = np.alltrue(np.array([np.alltrue(i == header_list[0]) for i in header_list]))
-		if not all_header_same:
-			raise ValueError
-	except ValueError:
-		print("All minimal model headers are not the same, this is unexpected and will likely lead to unexpected and undesired results")
-
-	all_mat = np.average(np.vstack(matrix_list), axis=0)
-	print(np.shape(all_mat))
-	
-	essentiality_scores = {}
-	for rxn in header_list[0]:
-		print(np.where(header_list[0] == rxn))
-		essentiality_scores[rxn] = all_mat[np.where(header_list[0] == rxn)][0]
-	
-	essential_values = list(set(essentiality_scores.values()))
-	essential_values.sort(reverse=True)
-	list_or_rxns_to_test = []
-	for i in essential_values:
-		for rxn in header_list[0]:
-			if essentiality_scores[rxn] == i:
-				list_or_rxns_to_test.append(rxn)
-	saved_ub_list = [{} for i in flux_model_list]
-	saved_lb_list = [{} for i in flux_model_list]
-
-	# remove all non constrained fluxes from all models
-	for flux_model_ind in range(len(flux_model_list)):
-		for rxn in list_or_rxns_to_test:
-			if (flux_model_list[flux_model_ind].model_dict["rxn_dict"][rxn]["ub"] < 0 or flux_model_list[flux_model_ind].model_dict["rxn_dict"][rxn]["lb"] > 0):
-				continue
-			else:
-				saved_ub_list[flux_model_ind][rxn] = copy.deepcopy(flux_model_list[flux_model_ind].model_dict["rxn_dict"][rxn]['ub'])
-				saved_lb_list[flux_model_ind][rxn] = copy.deepcopy(flux_model_list[flux_model_ind].model_dict["rxn_dict"][rxn]['lb'])
-				flux_model_list[flux_model_ind].update_reaction_bounds(rxn, 0, 0)
-	essential_flux_main = []
-	count = 0
-	# The current code structure slowly adds reactions back but does not stop as soon as one final reaction is found
-	# Rather all other similarly ranked reactions are also tested and those which make the model feasible are
-	# accepted
-	accepted = 0
-	current_ind = 0
-	essential_reaction_scores = []
-	for rxn in list_or_rxns_to_test:
-		# restores fluxes of reactions
-		for flux_model_ind in range(len(flux_model_list)):
-			if (flux_model_list[flux_model_ind].model_dict["rxn_dict"][rxn]["ub"] < 0 or flux_model_list[flux_model_ind].model_dict["rxn_dict"][rxn]["lb"] > 0):
-				continue
-			else:
-				flux_model_list[flux_model_ind].update_reaction_bounds(rxn, saved_lb_list[flux_model_ind][rxn], saved_ub_list[flux_model_ind][rxn])
-		# finds which models are feasible
-		
-		# This prevents the code from testing each model if it hits one thats infeasible
-		if flux_model_list[current_ind].test_feasibility():
-			current_ind += 1
-			if current_ind == (len(flux_model_list)):
-				essential_flux_main.append(rxn)
-				break
-			while flux_model_list[current_ind].test_feasibility():
-				current_ind +=1
-				if current_ind == (len(flux_model_list)):
-					essential_flux_main.append(rxn)
-					break
-		print(accepted,current_ind)
-		essential_flux_main.append(rxn)
-		accepted+=1
-		
-		# if there are still infeasible models the tested reactions are all essential and the algorithm goes to the
-		# next set of reactions (less essential reactions)
-		
-		
-	for flux_model_ind in range(len(flux_model_list)):
-		model_names = list(flux_model_list[flux_model_ind].model_dict["rxn_dict"].keys())
-		for rxn in model_names:
-			if rxn not in essential_flux_main:
-				del flux_model_list[flux_model_ind].model_dict["rxn_dict"][rxn]
-	return flux_model_list
-
-
 def minimal_flux_list_multimodel_model_differences(flux_model_list, min_model_matrix_location):
 	"""
-	Takes a list of flux model objects and an essential flux matrix and finds a core model that applies to all models.
-	Models must have the same reaction name order
-	"""
-	
+
+	Description:
+		Takes a list of flux model objects and an essential flux matrix and finds a core model that applies to all models.
+		Models must have the same reaction name order
+
+	Input:
+		flux_model_list (list): list of flux models
+
+		min_model_matrix_location (path): path to min model matrix
+
+	Output:
+		(list): returns list of flux models which have been all converted to a consensus models"""
 	load_dict = {}
 	for filename in os.listdir(min_model_matrix_location):
 		load_dict[filename.split("_")[0]] = {}
@@ -226,6 +141,16 @@ def minimal_flux_list_multimodel_model_differences(flux_model_list, min_model_ma
 	return flux_model_list
 
 def make_uniform_pos(flux_model_list,fva_first = True):
+	"""Description:
+		Makes all models passed into positive reactions
+
+	Input:
+		flux_model_list (list): list of flux models
+
+		fva_first (boolean, optional): If true, performs fva before running main algorithm
+
+	Output:
+		(list): alters the models in flux_model_list to make them positive, returns them in a list"""
 	if fva_first:
 		for flux_model in flux_model_list:
 			new_bounds = flux_model.fva()
@@ -264,12 +189,3 @@ def make_uniform_pos(flux_model_list,fva_first = True):
 					print(rxn_name,flux_model.model_dict["rxn_dict"][rxn_name]["rxn_metabolites"])
 					print(rxn_name+"_inverted" ,flux_model.model_dict["rxn_dict"][rxn_name+"_inverted"]["rxn_metabolites"])
 	return flux_model_list
-
-def comp_rxn_dict(rxn_name,model_1,model_2):
-	dict_1 = model_1.rxn_dict[rxn_name]
-	dict_2 = model_2.rxn_dict[rxn_name]
-	dicts_equal = True
-	for i in dict_1.keys():
-		if dict_1[i]!=dict_2[i]:
-			dicts_equal = False
-	return dicts_equal
