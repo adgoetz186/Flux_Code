@@ -123,7 +123,7 @@ warmup_points = np.load(Path('Data/HR/HR_Warmup/Recon_1_A549_4_30_2024/warmup_HR
 reaction_objectives = list(dict_opt.values())
 RPS_names = list(dict_opt.keys())
 #sampling_w_error(RPS_names,)
-all_LMs = np.array([ -9.76341077, -150])
+all_LMs = np.array([ -9.66596368, -284.81793646])
 all_alphas = np.array([2,1000])
 prev_signs = np.zeros_like(all_alphas)
 new_LMs,error_term,samples = sampling_w_error(all_LMs,RPS_names,reaction_objectives,recon_flux_model,warmup_points,Internal_nullspace_S,alpha = all_alphas)
@@ -140,7 +140,10 @@ while error_term > 0.05 and len(error_terms) <= 25:
 	for i in range(np.size(new_LMs)):
 		if (new_LMs[i] - all_LMs[-2, i]) * prev_signs[i] < 0:
 			all_alphas[i] /= 4
-		prev_signs[i] = (new_LMs[i] - all_LMs[-2, i]) / np.abs(new_LMs[i] - all_LMs[-2, i])
+		if (new_LMs[i] - all_LMs[-2, i]) > 0:
+			prev_signs[i] = (new_LMs[i] - all_LMs[-2, i]) / np.abs(new_LMs[i] - all_LMs[-2, i])
+		else:
+			prev_signs[i] = 1
 
 	error_terms.append(error_term)
 	time.sleep(20)

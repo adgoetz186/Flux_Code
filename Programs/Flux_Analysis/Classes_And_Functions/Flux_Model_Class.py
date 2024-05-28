@@ -2695,9 +2695,6 @@ class Flux_Balance_Model:
 		comp_neg_ind_cp = comp_neg_ind_cp[comp_perm]
 		bi_point += comp_neg_ind_cp
 		nbi_point = bi_point[cutter]
-		print(cutter)
-		print(exchange_cutter)
-		input(0)
 		if exchange_cutter is not None:
 			nbi_point = nbi_point[exchange_cutter]
 		return nbi_point
